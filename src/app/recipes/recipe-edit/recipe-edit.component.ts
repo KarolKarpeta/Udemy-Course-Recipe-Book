@@ -3,7 +3,6 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { RecipeService } from '../recipe.service';
-import { Recipe } from '../recipe.model';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -38,11 +37,12 @@ export class RecipeEditComponent implements OnInit {
     //   this.recipeForm.value['ingredients'])
     // jeśli wiemy, że atrybuty obiektów się pokrywają, możemy uprościć:
     const newRecipe = this.recipeForm.value;
-    if(this.editMode) {
+    if (this.editMode) {
       this.recipeService.updateRecipe(this.id, newRecipe);
     } else {
       this.recipeService.addRecipe(newRecipe);
     }
+    this.onCancel();
   }
 
   private initForm() {
@@ -96,7 +96,10 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onCancel() {
-    this.router.navigate(['/recipes']);
+    this.router.navigate(['../'], {relativeTo: this.route});
   }
 
+  onDeleteIngredient(index: number) {
+    (this.recipeForm.get('ingredients') as FormArray).removeAt(index);
+  }
 }
